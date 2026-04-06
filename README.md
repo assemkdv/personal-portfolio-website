@@ -1,6 +1,6 @@
 # Personal Portfolio Website
 
-A ortfolio website built with HTML, CSS, and JavaScript.
+A portfolio website built with HTML, CSS, and JavaScript.
 
 **Live site:** https://assemkdv.github.io/personal-portfolio-website/
 
