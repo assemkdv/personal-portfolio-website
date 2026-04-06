@@ -1,4 +1,4 @@
-// mobile menu toggle - the hamburger button
+// mobile menu toggle
 let isMenuOpen = false;
 
 function toggleMobileMenu(e) {
@@ -8,46 +8,36 @@ function toggleMobileMenu(e) {
     }
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
-    
-    if (!hamburger || !navMenu) {
-        return;
-    }
-    
+    if (!hamburger || !navMenu) return;
+
     isMenuOpen = !isMenuOpen;
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
 }
 
-(function() {
-    'use strict';
-    
+(function () {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
+    if (!hamburger || !navMenu) return;
 
-    if (!hamburger || !navMenu) {
-        return;
-    }
-
-    // handle touch events for mobile - primary method
-    hamburger.addEventListener('touchstart', function(e) {
+    hamburger.addEventListener('touchstart', function (e) {
         e.preventDefault();
         e.stopPropagation();
         toggleMobileMenu(e);
     }, { passive: false });
 
-    hamburger.addEventListener('touchend', function(e) {
+    hamburger.addEventListener('touchend', function (e) {
         e.preventDefault();
         e.stopPropagation();
     }, { passive: false });
 
-    // also handle click as backup
-    hamburger.addEventListener('click', function(e) {
+    hamburger.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         toggleMobileMenu(e);
     });
 
-    // close menu when you click a link
+    // close menu when a nav link is clicked
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             isMenuOpen = false;
@@ -56,7 +46,7 @@ function toggleMobileMenu(e) {
         });
     });
 
-    // close menu if you click outside of it
+    // close menu when clicking outside
     document.addEventListener('click', (e) => {
         if (isMenuOpen && !hamburger.contains(e.target) && !navMenu.contains(e.target)) {
             isMenuOpen = false;
@@ -66,180 +56,72 @@ function toggleMobileMenu(e) {
     });
 })();
 
-// smooth scrolling when clicking nav links
-// had to look this up because the default jump was too jarring
+// smooth scroll for nav links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            const offset = 80; // account for the fixed navbar
-            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
-            
+            const offset = 70;
             window.scrollTo({
-                top: targetPosition,
+                top: target.getBoundingClientRect().top + window.pageYOffset - offset,
                 behavior: 'smooth'
             });
         }
     });
 });
 
-// change navbar style when scrolling
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.boxShadow = '0 4px 30px rgba(232, 213, 255, 0.2)';
-        } else {
-            navbar.style.background = 'rgba(255, 255, 255, 0.85)';
-            navbar.style.boxShadow = '0 2px 20px rgba(232, 213, 255, 0.15)';
-        }
-    }
-});
-
-// highlight which nav link you're on based on scroll position
-// this was tricky to figure out but it works now
+// highlight active nav link on scroll
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-link');
 
-function highlightNav() {
+window.addEventListener('scroll', () => {
     const scrollY = window.pageYOffset;
-
     sections.forEach(section => {
-        const sectionHeight = section.offsetHeight;
-        const sectionTop = section.offsetTop - 100;
-        const sectionId = section.getAttribute('id');
-
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+        const top = section.offsetTop - 100;
+        const id = section.getAttribute('id');
+        if (scrollY >= top && scrollY < top + section.offsetHeight) {
             navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${sectionId}`) {
-                    link.classList.add('active');
-                }
+                link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
             });
         }
     });
-}
+});
 
-window.addEventListener('scroll', highlightNav);
-
-// fade in animations when you scroll to elements
-// learned about IntersectionObserver for this, it's pretty cool
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
+// fade in elements as they scroll into view
 const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.style.opacity = '1';
             entry.target.style.transform = 'translateY(0)';
+            fadeObserver.unobserve(entry.target);
         }
     });
-}, observerOptions);
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-// make elements fade in when they come into view
-const animatedElements = document.querySelectorAll(
-    '.about-card, .project-card, .skill-item, .skill-badge, .timeline-item, .contact-method, .learning-item'
-);
-
-animatedElements.forEach(el => {
+document.querySelectorAll('.project-card, .skill-badge, .contact-method, .learning-item').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     fadeObserver.observe(el);
 });
 
-// animate skill bars when you scroll to them
-const skillBars = document.querySelectorAll('.skill-progress');
-const skillObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const progressBar = entry.target;
-            const width = progressBar.style.width;
-            
-            // reset to 0 then animate to the actual width
-            progressBar.style.width = '0%';
-            progressBar.style.transition = 'width 1.5s ease-out';
-            
-            setTimeout(() => {
-                progressBar.style.width = width;
-            }, 100);
-            
-            // stop watching after it animates once
-            skillObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 });
-
-skillBars.forEach(bar => {
-    skillObserver.observe(bar);
-});
-
-// contact form removed - using mailto link instead
-
-// parallax effect for the floating shapes
-// makes them move at different speeds when scrolling
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const shapes = document.querySelectorAll('.floating-shape');
-    
-    shapes.forEach((shape, index) => {
-        const speed = 0.2 + (index * 0.1);
-        const rotation = scrolled * 0.05;
-        shape.style.transform = `translate(${scrolled * speed * 0.3}px, ${scrolled * speed}px) rotate(${rotation}deg)`;
-    });
-});
-
-// smooth transitions for project cards
-document.querySelectorAll('.project-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transition = 'all 0.3s ease';
-    });
-});
-
-// timeline items fade in one after another
+// timeline items fade in one by one
 const timelineObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
+    entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
             setTimeout(() => {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateX(0)';
-            }, index * 200);
+            }, i * 150);
+            timelineObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.2 });
+}, { threshold: 0.15 });
 
 document.querySelectorAll('.timeline-item').forEach(item => {
     item.style.opacity = '0';
-    item.style.transform = 'translateX(-20px)';
-    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    item.style.transform = 'translateX(-16px)';
+    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     timelineObserver.observe(item);
-});
-
-// lazy loading images
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.removeAttribute('data-src');
-                    observer.unobserve(img);
-                }
-            }
-        });
-    });
-
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
-}
-
-// smooth transitions to buttons and interactive stuff
-document.querySelectorAll('a, button, .project-card, .skill-badge, .contact-method').forEach(element => {
-    element.style.transition = 'all 0.3s ease';
 });
