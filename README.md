@@ -4,10 +4,6 @@ A portfolio website built with HTML, CSS, and JavaScript.
 
 **Live site:** https://assemkdv.github.io/personal-portfolio-website/
 
-## About
-
-Personal portfolio for Assem Kadirova — a first-year Computer Science student at Texas Christian University. The site showcases my projects, skills, and experience.
-
 ## Built With
 
 - HTML, CSS, JavaScript
