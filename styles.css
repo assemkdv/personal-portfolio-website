@@ -109,7 +109,7 @@ body {
 
 .hero-greeting {
     font-size: 0.95rem;
-    color: #e8613a;
+    color: #c9637a;
     margin-bottom: 1rem;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -271,7 +271,7 @@ section {
 }
 
 .project-card:hover {
-    border-color: #e8613a;
+    border-color: #c9637a;
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(232, 97, 58, 0.08);
 }
@@ -384,8 +384,8 @@ section {
 }
 
 .skill-badge:hover {
-    border-color: #e8613a;
-    color: #e8613a;
+    border-color: #c9637a;
+    color: #c9637a;
     transform: translateY(-1px);
 }
 
@@ -406,7 +406,7 @@ section {
     content: '→';
     position: absolute;
     left: 0;
-    color: #e8613a;
+    color: #c9637a;
     font-size: 0.8rem;
 }
 
@@ -459,7 +459,7 @@ section {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #e8613a;
+    background: #c9637a;
 }
 
 .timeline-content h3 {
@@ -497,7 +497,7 @@ section {
 }
 
 .timeline-content a {
-    color: #e8613a;
+    color: #c9637a;
     text-decoration: none;
     font-weight: 500;
 }
@@ -551,7 +551,7 @@ section {
 }
 
 .contact-method:hover {
-    border-color: #e8613a;
+    border-color: #c9637a;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(232, 97, 58, 0.08);
 }
@@ -579,7 +579,7 @@ section {
 }
 
 .contact-method p a:hover {
-    color: #e8613a;
+    color: #c9637a;
 }
 
 .contact-cta { margin-top: 0.5rem; }
